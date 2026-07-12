@@ -9,409 +9,389 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <style>
-  :root{
-    --gold: #C9A66B;
-    --gold-soft: #E4D3AF;
-    --paper: #FBF7F2;
-    --line: rgba(36,20,25,0.14);
-  }
-  [data-g="f"]{
-    --ink: #2B141C;
-    --bg: #F7E9E3;
-    --panel: #FDF6F3;
-    --accent: #7A2E3A;
-    --accent-soft: #E9B9C1;
-    --tag-bg: #F3D9DD;
-    --tag-ink: #7A2E3A;
-  }
-  [data-g="m"]{
-    --ink: #131F2B;
-    --bg: #E4EBEF;
-    --panel: #F2F6F8;
-    --accent: #2C4B63;
-    --accent-soft: #A9C4D4;
-    --tag-bg: #DCE7EC;
-    --tag-ink: #234058;
-  }
-
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    min-height:100dvh;
-    background:
-      radial-gradient(1200px 700px at 15% -10%, var(--accent-soft) 0%, transparent 55%),
-      radial-gradient(900px 600px at 110% 10%, var(--gold-soft) 0%, transparent 45%),
-      var(--bg);
-    color:var(--ink);
-    font-family:'Space Grotesk', sans-serif;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:32px 16px 56px;
-  }
-  @media (prefers-reduced-motion: no-preference){
-    .pass{ animation: rise .7s cubic-bezier(.16,1,.3,1) both; }
-    .stub{ animation: rise .7s cubic-bezier(.16,1,.3,1) .12s both; }
-  }
-  @keyframes rise{
-    from{ opacity:0; transform: translateY(14px); }
-    to{ opacity:1; transform: translateY(0); }
-  }
-
-  .wrap{ width:100%; max-width:400px; }
-
-  .masthead{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    padding:0 6px 14px;
-    letter-spacing:.14em;
-  }
-  .masthead .brand{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:13px;
-    text-transform:uppercase;
-    color:var(--ink);
-  }
-  .masthead .brand span{ color:var(--accent); }
-  .masthead .kicker{
-    font-family:'JetBrains Mono', monospace;
-    font-size:11px;
-    text-transform:uppercase;
-    color:var(--ink);
-    opacity:.55;
-  }
-
-  .pass{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:22px;
-    box-shadow: 0 30px 60px -25px rgba(20,10,14,.35), 0 2px 0 rgba(255,255,255,.5) inset;
-    overflow:hidden;
-    position:relative;
-  }
-  .pass::before{
-    content:"";
-    position:absolute; inset:10px;
-    border:1px solid var(--gold);
-    border-radius:14px;
-    opacity:.55;
-    pointer-events:none;
-  }
-
-  .pass-top{ padding:30px 26px 22px; position:relative; }
-
-  .eyebrow{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-family:'JetBrains Mono', monospace;
-    font-size:11px;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:var(--accent);
-  }
-  .eyebrow::before{
-    content:"";
-    width:6px;height:6px;border-radius:50%;
-    background:var(--accent);
-  }
-
-  .name{
-    font-family:'Fraunces', serif;
-    font-weight:500;
-    font-size:clamp(30px, 8vw, 40px);
-    line-height:1.05;
-    margin:14px 0 6px;
-    letter-spacing:-.01em;
-  }
-  .name em{ font-style:italic; font-weight:500; color:var(--accent); }
-
-  .subline{
-    font-size:12.5px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    opacity:.7;
-    display:flex;
-    gap:10px;
-    align-items:center;
-  }
-  .subline .dot{ opacity:.4; }
-
-  .perf{
-    position:relative;
-    height:0;
-    border-top:2px dashed var(--line);
-    margin:22px -26px 0;
-  }
-  .perf::before,.perf::after{
-    content:"";
-    position:absolute; top:-11px;
-    width:22px; height:22px;
-    border-radius:50%;
-    background: var(--bg);
-    box-shadow: 0 0 0 1px var(--line) inset;
-  }
-  .perf::before{ left:-11px; }
-  .perf::after{ right:-11px; }
-
-  .details{
-    padding:24px 26px 8px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:18px 16px;
-  }
-  .field{ min-width:0; }
-  .field .label{
-    font-family:'JetBrains Mono', monospace;
-    font-size:10px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    opacity:.55;
-    margin-bottom:5px;
-  }
-  .field .value{
-    font-size:15px;
-    font-weight:600;
-    line-height:1.3;
-  }
-  .field.full{ grid-column:1 / -1; }
-
-  .tags{
-    display:flex;
-    flex-wrap:wrap;
-    gap:7px;
-    margin-top:2px;
-  }
-  .tag{
-    background:var(--tag-bg);
-    color:var(--tag-ink);
-    font-size:11.5px;
-    font-weight:600;
-    padding:6px 11px;
-    border-radius:999px;
-    letter-spacing:.02em;
-  }
-
-  .stub{
-    background:var(--accent);
-    color:var(--paper);
-    padding:20px 26px 24px;
-    margin-top:24px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-  }
-  .stub .stub-left{
-    display:flex; flex-direction:column; gap:3px;
-  }
-  .stub .admit{
-    font-family:'Fraunces', serif;
-    font-style:italic;
-    font-size:17px;
-  }
-  .stub .serial{
-    font-family:'JetBrains Mono', monospace;
-    font-size:11px;
-    letter-spacing:.1em;
-    opacity:.75;
-  }
-  .qr{
-    background:#fff;
-    padding:6px;
-    border-radius:8px;
-    line-height:0;
-    flex-shrink:0;
-  }
-  .qr canvas, .qr img{ display:block; width:64px; height:64px; }
-
-  .foot{
-    text-align:center;
-    margin-top:16px;
-    font-family:'JetBrains Mono', monospace;
-    font-size:10.5px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    opacity:.5;
-  }
-
-  /* demo switcher — remove for production */
-  .demo-switch{
-    position:fixed; top:14px; right:14px;
-    display:flex; gap:6px;
-    background:rgba(255,255,255,.7);
-    backdrop-filter:blur(6px);
-    padding:5px; border-radius:999px;
-    box-shadow:0 6px 20px -8px rgba(0,0,0,.3);
-    z-index:10;
-  }
-  .demo-switch button{
-    border:none; cursor:pointer;
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:600; font-size:11.5px;
-    letter-spacing:.05em;
-    padding:7px 13px;
-    border-radius:999px;
-    background:transparent;
-    color:#2B141C;
-    opacity:.55;
-  }
-  .demo-switch button.active{
-    background:#2B141C; color:#fff; opacity:1;
-  }
+:root{
+--gold: #C9A66B;
+--gold-soft: #E4D3AF;
+--paper: #FBF7F2;
+--line: rgba(36,20,25,0.14);
+}
+[data-g="f"]{
+--ink: #2B141C;
+--bg: #F7E9E3;
+--panel: #FDF6F3;
+--accent: #7A2E3A;
+--accent-soft: #E9B9C1;
+--tag-bg: #F3D9DD;
+--tag-ink: #7A2E3A;
+}
+[data-g="m"]{
+--ink: #131F2B;
+--bg: #E4EBEF;
+--panel: #F2F6F8;
+--accent: #2C4B63;
+--accent-soft: #A9C4D4;
+--tag-bg: #DCE7EC;
+--tag-ink: #234058;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+min-height:100dvh;
+background:
+radial-gradient(1200px 700px at 15% -10%, var(--accent-soft) 0%, transparent 55%),
+radial-gradient(900px 600px at 110% 10%, var(--gold-soft) 0%, transparent 45%),
+var(--bg);
+color:var(--ink);
+font-family:'Space Grotesk', sans-serif;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:32px 16px 56px;
+}
+@media (prefers-reduced-motion: no-preference){
+.pass{ animation: rise .7s cubic-bezier(.16,1,.3,1) both; }
+.stub{ animation: rise .7s cubic-bezier(.16,1,.3,1) .12s both; }
+}
+@keyframes rise{
+from{ opacity:0; transform: translateY(14px); }
+to{ opacity:1; transform: translateY(0); }
+}
+.wrap{ width:100%; max-width:400px; }
+.masthead{
+display:flex;
+align-items:baseline;
+justify-content:space-between;
+padding:0 6px 14px;
+letter-spacing:.14em;
+}
+.masthead .brand{
+font-family:'Space Grotesk', sans-serif;
+font-weight:700;
+font-size:13px;
+text-transform:uppercase;
+color:var(--ink);
+}
+.masthead .brand span{ color:var(--accent); }
+.masthead .kicker{
+font-family:'JetBrains Mono', monospace;
+font-size:11px;
+text-transform:uppercase;
+color:var(--ink);
+opacity:.55;
+}
+.pass{
+background:var(--panel);
+border:1px solid var(--line);
+border-radius:22px;
+box-shadow: 0 30px 60px -25px rgba(20,10,14,.35), 0 2px 0 rgba(255,255,255,.5) inset;
+overflow:hidden;
+position:relative;
+}
+.pass::before{
+content:"";
+position:absolute; inset:10px;
+border:1px solid var(--gold);
+border-radius:14px;
+opacity:.55;
+pointer-events:none;
+}
+.pass-top{ padding:30px 26px 22px; position:relative; }
+.eyebrow{
+display:flex;
+align-items:center;
+gap:8px;
+font-family:'JetBrains Mono', monospace;
+font-size:11px;
+letter-spacing:.12em;
+text-transform:uppercase;
+color:var(--accent);
+}
+.eyebrow::before{
+content:"";
+width:6px;height:6px;border-radius:50%;
+background:var(--accent);
+}
+.name{
+font-family:'Fraunces', serif;
+font-weight:500;
+font-size:clamp(30px, 8vw, 40px);
+line-height:1.05;
+margin:14px 0 6px;
+letter-spacing:-.01em;
+}
+.name em{ font-style:italic; font-weight:500; color:var(--accent); }
+.subline{
+font-size:12.5px;
+letter-spacing:.08em;
+text-transform:uppercase;
+opacity:.7;
+display:flex;
+gap:10px;
+align-items:center;
+}
+.subline .dot{ opacity:.4; }
+.perf{
+position:relative;
+height:0;
+border-top:2px dashed var(--line);
+margin:22px -26px 0;
+}
+.perf::before,.perf::after{
+content:"";
+position:absolute; top:-11px;
+width:22px; height:22px;
+border-radius:50%;
+background: var(--bg);
+box-shadow: 0 0 0 1px var(--line) inset;
+}
+.perf::before{ left:-11px; }
+.perf::after{ right:-11px; }
+.details{
+padding:24px 26px 8px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px 16px;
+}
+.field{ min-width:0; }
+.field .label{
+font-family:'JetBrains Mono', monospace;
+font-size:10px;
+letter-spacing:.14em;
+text-transform:uppercase;
+opacity:.55;
+margin-bottom:5px;
+}
+.field .value{
+font-size:15px;
+font-weight:600;
+line-height:1.3;
+}
+.field.full{ grid-column:1 / -1; }
+.tags{
+display:flex;
+flex-wrap:wrap;
+gap:7px;
+margin-top:2px;
+}
+.tag{
+background:var(--tag-bg);
+color:var(--tag-ink);
+font-size:11.5px;
+font-weight:600;
+padding:6px 11px;
+border-radius:999px;
+letter-spacing:.02em;
+}
+.stub{
+background:var(--accent);
+color:var(--paper);
+padding:20px 26px 24px;
+margin-top:24px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:16px;
+}
+.stub .stub-left{
+display:flex; flex-direction:column; gap:3px;
+}
+.stub .admit{
+font-family:'Fraunces', serif;
+font-style:italic;
+font-size:17px;
+}
+.stub .serial{
+font-family:'JetBrains Mono', monospace;
+font-size:11px;
+letter-spacing:.1em;
+opacity:.75;
+}
+.qr{
+background:#fff;
+padding:6px;
+border-radius:8px;
+line-height:0;
+flex-shrink:0;
+}
+.qr canvas, .qr img{ display:block; width:64px; height:64px; }
+.foot{
+text-align:center;
+margin-top:16px;
+font-family:'JetBrains Mono', monospace;
+font-size:10.5px;
+letter-spacing:.1em;
+text-transform:uppercase;
+opacity:.5;
+}
+/* demo switcher — remove for production */
+.demo-switch{
+position:fixed; top:14px; right:14px;
+display:flex; gap:6px;
+background:rgba(255,255,255,.7);
+backdrop-filter:blur(6px);
+padding:5px; border-radius:999px;
+box-shadow:0 6px 20px -8px rgba(0,0,0,.3);
+z-index:10;
+}
+.demo-switch button{
+border:none; cursor:pointer;
+font-family:'Space Grotesk', sans-serif;
+font-weight:600; font-size:11.5px;
+letter-spacing:.05em;
+padding:7px 13px;
+border-radius:999px;
+background:transparent;
+color:#2B141C;
+opacity:.55;
+}
+.demo-switch button.active{
+background:#2B141C; color:#fff; opacity:1;
+}
 </style>
 </head>
 <body>
-
 <div class="demo-switch" id="demoSwitch">
-  <button data-demo="f" class="active">Exemple femme</button>
-  <button data-demo="m">Exemple homme</button>
+<button data-demo="f" class="active">Exemple femme</button>
+<button data-demo="m">Exemple homme</button>
 </div>
-
 <div class="wrap" id="app" data-g="f">
-  <div class="masthead">
-    <div class="brand">UNITY <span>POPUP</span></div>
-    <div class="kicker" id="mastKicker">FEMME · PASS D'ACCÈS</div>
-  </div>
-
-  <div class="pass">
-    <div class="pass-top">
-      <div class="eyebrow" id="eyebrow">Invitation confirmée</div>
-      <div class="name" id="name">Selma <em>Hachelaf</em></div>
-      <div class="subline">
-        <span id="ageRange">18–21 ans</span>
-        <span class="dot">·</span>
-        <span id="genderLabel">Femme</span>
-      </div>
-    </div>
-
-    <div class="perf"></div>
-
-    <div class="details">
-      <div class="field">
-        <div class="label">Jour</div>
-        <div class="value" id="day">Dim. 12 juillet</div>
-      </div>
-      <div class="field">
-        <div class="label">Créneau</div>
-        <div class="value" id="time">13h00 – 15h00</div>
-      </div>
-      <div class="field full">
-        <div class="label">Marques favorites</div>
-        <div class="tags" id="brands"></div>
-      </div>
-    </div>
-
-    <div class="stub">
-      <div class="stub-left">
-        <div class="admit">Admit One</div>
-        <div class="serial" id="serial">N° 014 / SUN12</div>
-      </div>
-      <div class="qr" id="qr"></div>
-    </div>
-  </div>
-
-  <div class="foot">Présentez ce pass à l'entrée</div>
+<div class="masthead">
+<div class="brand">UNITY <span>POPUP</span></div>
+<div class="kicker" id="mastKicker">FEMME · PASS D'ACCÈS</div>
 </div>
-
+<div class="pass">
+<div class="pass-top">
+<div class="eyebrow" id="eyebrow">Invitation confirmée</div>
+<div class="name" id="name">Selma <em>Hachelaf</em></div>
+<div class="subline">
+<span id="ageRange">18–21 ans</span>
+<span class="dot">·</span>
+<span id="genderLabel">Femme</span>
+</div>
+</div>
+<div class="perf"></div>
+<div class="details">
+<div class="field">
+<div class="label">Jour</div>
+<div class="value" id="day">Dim. 12 juillet</div>
+</div>
+<div class="field">
+<div class="label">Créneau</div>
+<div class="value" id="time">13h00 – 15h00</div>
+</div>
+<div class="field full">
+<div class="label">Marques favorites</div>
+<div class="tags" id="brands"></div>
+</div>
+</div>
+<div class="stub">
+<div class="stub-left">
+<div class="admit">Admit One</div>
+<div class="serial" id="serial">N° 014 / SUN12</div>
+</div>
+<div class="qr" id="qr"></div>
+</div>
+</div>
+<div class="foot">Présentez ce pass à l'entrée</div>
+</div>
 <script>
-  // ---- Exemple de données réelles issues du fichier LIST-ACCEPTED ----
-  const DEMOS = {
-    f: {
-      name: "Selma Hachelaf",
-      gender: "f",
-      ageRange: "18–21 ans",
-      day: "Dim. 12 juillet",
-      time: "13h00 – 15h00",
-      brands: ["WYN"],
-      serial: "N° 014 / DIM12"
-    },
-    m: {
-      name: "Nazim Belbahar",
-      gender: "m",
-      ageRange: "18–21 ans",
-      day: "Dim. 12 juillet",
-      time: "16h00 – 18h00",
-      brands: ["WYN"],
-      serial: "N° 027 / DIM12"
-    }
-  };
+// ---- Exemple de données réelles issues du fichier LIST-ACCEPTED ----
+const DEMOS = {
+f: {
+name: "Selma Hachelaf",
+gender: "f",
+ageRange: "18–21 ans",
+day: "Dim. 12 juillet",
+time: "13h00 – 15h00",
+brands: ["WYN"],
+serial: "N° 014 / DIM12"
+},
+m: {
+name: "Nazim Belbahar",
+gender: "m",
+ageRange: "18–21 ans",
+day: "Dim. 12 juillet",
+time: "16h00 – 18h00",
+brands: ["WYN"],
+serial: "N° 027 / DIM12"
+}
+};
 
-  // ---- Lecture des paramètres URL (mode production réel) ----
-  // Exemple d'URL générée par personne :
-  // pass.html?n=Selma%20Hachelaf&g=f&a=18-21&d=Dim.%2012%20juillet&t=13h00%20-%2015h00&b=WYN,Amazeeri&s=014
-  function readParams(){
-    const p = new URLSearchParams(location.search);
-    if(!p.has('n')) return null;
-    return {
-      name: p.get('n') || '',
-      gender: (p.get('g') || 'f').toLowerCase() === 'm' ? 'm' : 'f',
-      ageRange: (p.get('a') || '').replace('-', '–') + (p.get('a') ? ' ans' : ''),
-      day: p.get('d') || '',
-      time: (p.get('t') || '').replace('-', ' – '),
-      brands: (p.get('b') || '').split(',').map(s=>s.trim()).filter(Boolean),
-      serial: p.get('s') ? ('N° ' + p.get('s')) : ''
-    };
-  }
+// ---- Lecture des paramètres URL (mode production réel) ----
+// Exemple d'URL générée par personne :
+// pass.html?n=Selma%20Hachelaf&g=f&a=18-21&d=Dim.%2012%20juillet&t=13h00%20-%2015h00&b=WYN,Amazeeri&s=014
 
-  function splitName(full){
-    const parts = full.trim().split(/\s+/);
-    if(parts.length === 1) return {first:'', last:parts[0]};
-    const last = parts.pop();
-    return {first: parts.join(' '), last};
-  }
+function readParams(){
+const p = new URLSearchParams(location.search);
+if(!p.has('n')) return null;
+return {
+name: p.get('n') || '',
+gender: (p.get('g') || 'f').toLowerCase() === 'm' ? 'm' : 'f',
+ageRange: (p.get('a') || '').replace('-', '–') + (p.get('a') ? ' ans' : ''),
+day: p.get('d') || '',
+time: (p.get('t') || '').replace('-', ' – '),
+brands: (p.get('b') || '').split(',').map(s=>s.trim()).filter(Boolean),
+serial: p.get('s') ? ('N° ' + p.get('s')) : ''
+};
+}
 
-  function render(data){
-    const app = document.getElementById('app');
-    app.dataset.g = data.gender;
+function splitName(full){
+const parts = full.trim().split(/\s+/);
+if(parts.length === 1) return {first:'', last:parts[0]};
+const last = parts.pop();
+return {first: parts.join(' '), last};
+}
 
-    const {first, last} = splitName(data.name);
-    document.getElementById('name').innerHTML =
-      first ? `${first} <em>${last}</em>` : `<em>${last}</em>`;
+function render(data){
+const app = document.getElementById('app');
+app.dataset.g = data.gender;
 
-    document.getElementById('genderLabel').textContent = data.gender === 'f' ? 'Femme' : 'Homme';
-    document.getElementById('mastKicker').textContent =
-      (data.gender === 'f' ? 'FEMME' : 'HOMME') + ' · PASS D\u2019ACCÈS';
-    document.getElementById('ageRange').textContent = data.ageRange || '—';
-    document.getElementById('day').textContent = data.day || '—';
-    document.getElementById('time').textContent = data.time || '—';
-    document.getElementById('serial').textContent = data.serial || 'N° —';
+const {first, last} = splitName(data.name);
+document.getElementById('name').innerHTML =
+first ? `${first} <em>${last}</em>` : `<em>${last}</em>`;
 
-    const brandsEl = document.getElementById('brands');
-    brandsEl.innerHTML = '';
-    (data.brands.length ? data.brands : ['—']).forEach(b=>{
-      const el = document.createElement('span');
-      el.className = 'tag';
-      el.textContent = b;
-      brandsEl.appendChild(el);
-    });
+document.getElementById('genderLabel').textContent = data.gender === 'f' ? 'Femme' : 'Homme';
+document.getElementById('mastKicker').textContent =
+(data.gender === 'f' ? 'FEMME' : 'HOMME') + ' · PASS D\u2019ACCÈS';
 
-    // QR — encode un identifiant (ici l'URL de la page elle-même à titre de démo)
-    const qrEl = document.getElementById('qr');
-    qrEl.innerHTML = '';
-    const qr = qrcode(0, 'M');
-    qr.addData(location.href.split('?')[0] + '?id=' + encodeURIComponent(data.serial || data.name));
-    qr.make();
-    qrEl.innerHTML = qr.createImgTag(3, 2);
-  }
+document.getElementById('ageRange').textContent = data.ageRange || '—';
+document.getElementById('day').textContent = data.day || '—';
+document.getElementById('time').textContent = data.time || '—';
+document.getElementById('serial').textContent = data.serial || 'N° —';
 
-  const urlData = readParams();
-  if(urlData){
-    render(urlData);
-    document.getElementById('demoSwitch').style.display = 'none';
-  } else {
-    render(DEMOS.f);
-    document.querySelectorAll('.demo-switch button').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        document.querySelectorAll('.demo-switch button').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        render(DEMOS[btn.dataset.demo]);
-      });
-    });
-  }
+const brandsEl = document.getElementById('brands');
+brandsEl.innerHTML = '';
+(data.brands.length ? data.brands : ['—']).forEach(b=>{
+const el = document.createElement('span');
+el.className = 'tag';
+el.textContent = b;
+brandsEl.appendChild(el);
+});
+
+// QR — encode la localisation de l'événement (The Chill Spot, Alger)
+const VENUE_MAPS_URL = "https://www.google.com/maps/search/?api=1&query=36.717172,3.0413146";
+const qrEl = document.getElementById('qr');
+qrEl.innerHTML = '';
+const qr = qrcode(0, 'M');
+qr.addData(VENUE_MAPS_URL);
+qr.make();
+qrEl.innerHTML = qr.createImgTag(3, 2);
+}
+
+const urlData = readParams();
+if(urlData){
+render(urlData);
+document.getElementById('demoSwitch').style.display = 'none';
+} else {
+render(DEMOS.f);
+document.querySelectorAll('.demo-switch button').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.demo-switch button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+render(DEMOS[btn.dataset.demo]);
+});
+});
+}
 </script>
-
 </body>
 </html>
